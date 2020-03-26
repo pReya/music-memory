@@ -18,7 +18,7 @@ export default function App() {
 
   useEffect(() => {
     console.log("Use Effect", state);
-    if (state.token && !state.data) {
+    if (state.token && !state.tracks) {
       console.log("Calling fetchData");
       dispatch(fetchData("playlists/0D5oNpkqZxdmklYvWwDKYI", state.token));
     }
@@ -39,7 +39,7 @@ export default function App() {
       <h1>Music Memory</h1>
       <AuthorizeButton />
 
-      <TilesContainer count={24} />
+      <TilesContainer count={state.tiles} />
     </StyledApp>
   );
 }
