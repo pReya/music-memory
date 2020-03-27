@@ -1,7 +1,11 @@
 import React, { useRef, useContext, useEffect, useState } from "react";
 import { store } from "../state/Store";
 import styled from "styled-components";
-import { setIsPlaying, setLastSelectedTile } from "../state/Actions";
+import {
+  setIsPlaying,
+  setLastSelectedTile,
+  setIsPlayingRef
+} from "../state/Actions";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import theme from "../theme";
@@ -26,7 +30,7 @@ const StyledWrapper = styled.div`
   transition-property: transform, color, border-color;
   cursor: pointer;
   margin: 10px;
-  padding: 20px;
+  padding: 25px;
 
   &:hover,
   &:focus,
@@ -40,10 +44,14 @@ const StyledWrapper = styled.div`
 
 function Tile({ number = 12, trackData }) {
   const audioElementRef = useRef(null);
-  const { state, dispatch } = useContext(store);
+  const {
+    dispatch,
+    state: { lastSelectedTile, tracks, isPlaying, isPlayingRef }
+  } = useContext(store);
   const [progress, setProgress] = useState(0);
-  const tileIsPlaying = state.isPlaying === number;
+  const tileIsPlaying = isPlaying === number;
 
+  // Update circle progress every 200ms
   useEffect(() => {
     if (tileIsPlaying) {
       setInterval(
@@ -57,32 +65,66 @@ function Tile({ number = 12, trackData }) {
     }
   }, [tileIsPlaying]);
 
+  // Attach "ended" listener to reset state after song has finished playing
+  useEffect(() => {
+    if (audioElementRef.current) {
+      audioElementRef.current.addEventListener("ended", () => {
+        dispatch(setIsPlayingRef(null));
+        dispatch(setIsPlaying(false));
+        console.log("Ended Playing");
+      });
+    }
+  }, [audioElementRef, dispatch]);
+
+  const startPlaying = () => {
+    dispatch(setLastSelectedTile(number));
+    dispatch(setIsPlayingRef(audioElementRef));
+    dispatch(setIsPlaying(number));
+    audioElementRef.current.play();
+    console.log("Play ", number);
+  };
+
+  const stopPlayingAndReset = () => {
+    dispatch(setIsPlaying(false));
+    dispatch(setIsPlayingRef(null));
+    audioElementRef.current.pause();
+    audioElementRef.current.currentTime = 0;
+    console.log("Stop and reset playing ", number);
+  };
+
   return (
     <StyledWrapper
       playing={tileIsPlaying}
       onClick={() => {
-        audioElementRef.current.addEventListener("ended", () => {
-          dispatch(setIsPlaying(false));
-          console.log("Ended");
-        });
-        if (!state.isPlaying) {
-          if (
-            state.lastSelectedTile &&
-            state.tracks[state.lastSelectedTile].id === state.tracks[number]
-          ) {
-            console.log("Found a pair");
-          }
-          dispatch(setLastSelectedTile(number));
-
+        lastSelectedTile &&
+          console.log(
+            `Last Selected Tile: ${lastSelectedTile} – id: ${
+              tracks[lastSelectedTile - 1].id
+            }`
+          );
+        console.log(`Selected Tile: ${number} – id: ${tracks[number - 1].id}`);
+        if (
+          lastSelectedTile &&
+          lastSelectedTile !== number &&
+          tracks[lastSelectedTile - 1].id === tracks[number - 1].id
+        ) {
+          console.warn("Found a pair");
+        }
+        // No song is playing, yet
+        if (!isPlaying) {
           // Start Playback
-          dispatch(setIsPlaying(number));
-          audioElementRef.current.play();
-          console.log("Play ", number);
+          startPlaying();
         } else {
-          // Stop Playback
-          dispatch(setIsPlaying(false));
-          audioElementRef.current.pause();
-          audioElementRef.current.currentTime = 0;
+          // Tile is alreay playing -> click again to stop
+          if (tileIsPlaying) {
+            // Stop Playback
+            stopPlayingAndReset();
+          } else {
+            // Stop other tile from playing and play
+            isPlayingRef.current.pause();
+            isPlayingRef.current.currentTime = 0;
+            startPlaying();
+          }
         }
       }}
     >

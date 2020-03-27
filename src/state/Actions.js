@@ -1,8 +1,9 @@
 export const actionTypes = {
-  SET_TOKEN: "SET_TOKEN",
-  FETCH_PLAYLIST: "FETCH_PLAYLIST",
+  SET_API_TOKEN: "SET_API_TOKEN",
+  SET_TRACKS: "SET_TRACKS",
   SET_IS_PLAYING: "SET_IS_PLAYING",
-  SET_LAST_SELECTED_TILE: "SET_LAST_SELECTED_TILE"
+  SET_LAST_SELECTED_TILE: "SET_LAST_SELECTED_TILE",
+  SET_IS_PLAYING_REF: "SET_IS_PLAYING_REF"
 };
 
 export function setLastSelectedTile(tile) {
@@ -12,9 +13,16 @@ export function setLastSelectedTile(tile) {
   };
 }
 
-export function setToken(token) {
+export function setIsPlayingRef(ref) {
   return {
-    type: actionTypes.SET_TOKEN,
+    type: actionTypes.SET_IS_PLAYING_REF,
+    ref
+  };
+}
+
+export function setApiToken(token) {
+  return {
+    type: actionTypes.SET_API_TOKEN,
     token
   };
 }
@@ -26,6 +34,13 @@ export function setIsPlaying(id) {
   };
 }
 
+export function setTracks(tracks) {
+  return {
+    type: actionTypes.SET_TRACKS,
+    tracks
+  };
+}
+
 export function fetchData(endpoint, token) {
   return async (dispatch, getState) => {
     const data = await fetch("https://api.spotify.com/v1/" + endpoint, {
@@ -34,7 +49,6 @@ export function fetchData(endpoint, token) {
       }
     });
     const dataJSON = await data.json();
-    console.log("Data:", dataJSON);
     const filteredData = dataJSON.tracks.items
       .map(
         trackObject =>
@@ -44,10 +58,7 @@ export function fetchData(endpoint, token) {
           }
       )
       .filter(Boolean);
-    console.log("Filtered", filteredData);
-    dispatch({
-      type: actionTypes.FETCH_PLAYLIST,
-      tracks: filteredData
-    });
+    console.log("Filtered Data", filteredData);
+    dispatch(setTracks(filteredData));
   };
 }
