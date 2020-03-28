@@ -1,5 +1,5 @@
 export const actionTypes = {
-  SET_API_TOKEN: 'SET_API_TOKEN',
+  SET_API_INFO: 'SET_API_INFO',
   SET_TRACKS: 'SET_TRACKS',
   SET_IS_PLAYING: 'SET_IS_PLAYING',
   SET_LAST_SELECTED_TILE: 'SET_LAST_SELECTED_TILE',
@@ -21,10 +21,11 @@ export function setIsPlayingRef (ref) {
   }
 }
 
-export function setApiToken (token) {
+export function setApiInfo (token, expiration) {
   return {
-    type: actionTypes.SET_API_TOKEN,
-    token
+    type: actionTypes.SET_API_INFO,
+    token,
+    expiration
   }
 }
 

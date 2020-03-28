@@ -35,15 +35,16 @@ response_type=token`
 
 function AuthorizeButton () {
   const {
-    state: { apiToken }
+    state: { tracks }
   } = useContext(store)
+  const userIsNotAuthorized = tracks.length === 0
   const onClick = () => {
     window.location.assign(url)
   }
 
   return (
-    <StyledButton disabled={Boolean(apiToken)} onClick={onClick}>
-      Sign In On Spotify
+    <StyledButton disabled={!userIsNotAuthorized} onClick={onClick}>
+      {userIsNotAuthorized ? 'Sign In On Spotify' : 'You\'re signed in'}
     </StyledButton>
   )
 }

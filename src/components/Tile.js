@@ -13,10 +13,10 @@ import theme from '../theme'
 
 const StyledWrapper = styled.div`
   border: 1px solid;
-  border-color: ${({ playing, theme }) =>
-    playing ? 'red' : theme.colors.lightGray};
+  border-color: ${({ selected, theme }) =>
+    selected ? 'red' : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
-  background-color: ${({ trackData }) => trackData.solved ? 'green' : 'white'};
+  background-color: ${({ trackData, theme }) => trackData.solved ? theme.colors.spotifyGreen : 'white'};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
@@ -39,13 +39,13 @@ const StyledWrapper = styled.div`
   &:active {
     transform: scale(1.05);
     color: rgba(0, 0, 0, 0.6);
-    border-color: ${({ playing, theme }) =>
-      playing ? 'red' : theme.colors.darkGray};
+    border-color: ${({ selected, theme }) =>
+      selected ? 'red' : theme.colors.darkGray};
   }
 `
 
 function Tile (props) {
-  const { number = 12, trackData } = props
+  const { number, trackData } = props
   const audioElementRef = useRef(null)
   const {
     dispatch,
@@ -53,6 +53,7 @@ function Tile (props) {
   } = useContext(store)
   const [progress, setProgress] = useState(0)
   const tileIsPlaying = isPlaying === number
+  const selected = lastSelectedTile === number
 
   // Update circle progress every 200ms
   useEffect(() => {
@@ -75,11 +76,11 @@ function Tile (props) {
         dispatch(setIsPlayingRef(null))
         dispatch(setIsPlaying(false))
       })
+      audioElementRef.current.volume = 0.3
     }
   }, [audioElementRef, dispatch])
 
   const startPlaying = () => {
-    dispatch(setLastSelectedTile(number))
     dispatch(setIsPlayingRef(audioElementRef))
     dispatch(setIsPlaying(number))
     audioElementRef.current.play()
@@ -88,6 +89,7 @@ function Tile (props) {
   const stopPlayingAndReset = () => {
     dispatch(setIsPlaying(false))
     dispatch(setIsPlayingRef(null))
+    dispatch(setLastSelectedTile(number))
     audioElementRef.current.pause()
     audioElementRef.current.currentTime = 0
   }
@@ -95,7 +97,7 @@ function Tile (props) {
   return (
     <StyledWrapper
       {...props}
-      playing={tileIsPlaying}
+      selected={tileIsPlaying || selected}
       onClick={() => {
         lastSelectedTile &&
           console.log(
@@ -122,6 +124,7 @@ function Tile (props) {
           if (tileIsPlaying) {
             // Stop Playback
             stopPlayingAndReset()
+            dispatch(setLastSelectedTile(number))
           } else {
             // Stop other tile from playing and play
             isPlayingRef.current.pause()

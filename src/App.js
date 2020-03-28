@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import TilesContainer from './components/TilesContainer'
 import AuthorizeButton from './components/AuthorizeButton'
 import { store } from './state/Stores'
-import { setApiToken, fetchData } from './state/Actions'
+import { fetchData } from './state/Actions'
 import qs from 'query-string'
 
 const StyledApp = styled.div`
@@ -20,8 +20,15 @@ export default function App () {
   const history = useHistory()
 
   useEffect(() => {
-    if (state.apiToken && state.tracks.length === 0) {
-      dispatch(fetchData('playlists/0D5oNpkqZxdmklYvWwDKYI', state.apiToken))
+    // No data has been fetched, yet
+    if (state.tracks.length === 0) {
+      const storageToken = window.localStorage.getItem('token')
+      const storageExpirationTimestampSeconds = window.localStorage.getItem('expirationTimestampSeconds')
+      const nowTimeStampSeconds = Math.floor(Date.now() / 1000)
+      const tokenIsNotExpired = (storageExpirationTimestampSeconds - nowTimeStampSeconds) > 0
+      if (storageToken && storageExpirationTimestampSeconds && tokenIsNotExpired) {
+        dispatch(fetchData('playlists/0D5oNpkqZxdmklYvWwDKYI', storageToken))
+      }
     }
   }, [dispatch, state])
 
@@ -30,9 +37,11 @@ export default function App () {
       <Route
         path='/callback'
         render={() => {
-          const token = qs.parse(window.location.hash).access_token
+          const { access_token: token, expires_in: expiration } = qs.parse(window.location.hash)
           history.push('/')
-          dispatch(setApiToken(token))
+          const nowSeconds = Math.floor(Date.now() / 1000)
+          window.localStorage.setItem('token', token)
+          window.localStorage.setItem('expirationTimestampSeconds', Number(nowSeconds) + Number(expiration))
         }}
       />
       <StyledApp>

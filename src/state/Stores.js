@@ -4,6 +4,7 @@ import { actionTypes } from './Actions'
 
 const initialState = {
   apiToken: '',
+  apiExpiration: 0,
   tracks: [],
   tiles: 9,
   isPlaying: false,
@@ -16,8 +17,8 @@ export const store = createContext(initialState)
 const StoreProvider = ({ children }) => {
   const [state, dispatch] = useThunkReducer((state, action) => {
     switch (action.type) {
-      case actionTypes.SET_API_TOKEN: {
-        return { ...state, apiToken: action.token }
+      case actionTypes.SET_API_INFO: {
+        return { ...state, apiToken: action.token, apiExpiration: action.expiration }
       }
       case actionTypes.SET_TRACKS: {
         console.log('SET_TRACKS', action.tracks)
