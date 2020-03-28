@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from "react";
-import { Route, useHistory } from "react-router-dom";
-import styled from "styled-components";
-import TilesContainer from "./components/TilesContainer";
-import AuthorizeButton from "./components/AuthorizeButton";
-import { store } from "./state/Store";
-import { setApiToken, fetchData } from "./state/Actions";
-import qs from "query-string";
+import React, { useContext, useEffect } from 'react'
+import { Route, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
+import TilesContainer from './components/TilesContainer'
+import AuthorizeButton from './components/AuthorizeButton'
+import { store } from './state/Stores'
+import { setApiToken, fetchData } from './state/Actions'
+import qs from 'query-string'
 
 const StyledApp = styled.div`
   box-sizing: border-box;
@@ -13,26 +13,26 @@ const StyledApp = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+`
 
-export default function App() {
-  const { state, dispatch } = useContext(store);
-  const history = useHistory();
+export default function App () {
+  const { state, dispatch } = useContext(store)
+  const history = useHistory()
 
   useEffect(() => {
-    if (state.apiToken && !state.tracks) {
-      dispatch(fetchData("playlists/0D5oNpkqZxdmklYvWwDKYI", state.apiToken));
+    if (state.apiToken && state.tracks.length === 0) {
+      dispatch(fetchData('playlists/0D5oNpkqZxdmklYvWwDKYI', state.apiToken))
     }
-  }, [dispatch, state]);
+  }, [dispatch, state])
 
   return (
     <>
       <Route
-        path="/callback"
+        path='/callback'
         render={() => {
-          const token = qs.parse(window.location.hash)["access_token"];
-          history.push("/");
-          dispatch(setApiToken(token));
+          const token = qs.parse(window.location.hash).access_token
+          history.push('/')
+          dispatch(setApiToken(token))
         }}
       />
       <StyledApp>
@@ -42,5 +42,5 @@ export default function App() {
         <TilesContainer count={state.tiles} />
       </StyledApp>
     </>
-  );
+  )
 }

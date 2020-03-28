@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import Tile from "./Tile";
-import styled from "styled-components";
-import { store } from "../state/Store";
-import { setTracks } from "../state/Actions";
+import React, { useContext, useEffect } from 'react'
+import Tile from './Tile'
+import styled from 'styled-components'
+import { store } from '../state/Stores'
+import { setTracks } from '../state/Actions'
 
 const StyledContainer = styled.div`
   box-sizing: border-box;
@@ -11,40 +11,44 @@ const StyledContainer = styled.div`
   flex-wrap: wrap;
   max-width: 700px;
   margin: 40px auto;
-`;
+`
 
-function TilesContainer({ count = 9 }) {
-  const { state, dispatch } = useContext(store);
-  const [fields, setFields] = useState([]);
+const shuffleArray = array => {
+  const clonedArray = JSON.parse(JSON.stringify(array))
+  for (let i = clonedArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [clonedArray[i], clonedArray[j]] = [clonedArray[j], clonedArray[i]]
+  }
+  return clonedArray
+}
 
-  const shuffleArray = array => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  };
+function TilesContainer ({ count: tilesCount = 9 }) {
+  const { state, dispatch } = useContext(store)
 
+  // Modify state.tracks from raw API result to filtered, randomized and shortened array
   useEffect(() => {
-    if (state.tracks && state.tracks.length > count+1) {
-      console.log("Creating arrays");
-      // Create array with length of count (if count is even) or count+1 (if count is odd)
+    console.log('Use Effect')
+    if (state.tracks.length > tilesCount + 1) {
+      console.log('Creating tracks array')
+      // Tracks array length of count (if count is even) or count+1 (if count is odd) -> tracksArrayLength is always even
+      const tracksArrayLength = tilesCount % 2 === 0 ? tilesCount : tilesCount + 1
+
+      const shuffledApiResults = shuffleArray(state.tracks)
+
       const initialisedFields = [
-        ...new Array(count % 2 === 0 ? count : count + 1)
-      ].map((_, i) => state.tracks[i % Math.ceil(count / 2)]);
-      shuffleArray(initialisedFields);
-      setFields(initialisedFields);
-      dispatch(setTracks(initialisedFields));
-      console.log(initialisedFields);
+        ...new Array(tracksArrayLength)
+      ].map((_, i) => shuffledApiResults[i % (tracksArrayLength / 2)])
+      dispatch(setTracks(shuffleArray(initialisedFields)))
     }
-  }, [state.tracks, count]);
+  }, [state, tilesCount, dispatch])
 
   return (
     <StyledContainer>
-      {fields.map((field, i) => (
-        <Tile key={i + 1} number={i + 1} trackData={field} />
+      {Boolean(state.tracks.length) && state.tracks.map((track, i) => (
+        <Tile key={i + 1} number={i + 1} trackData={track} />
       ))}
     </StyledContainer>
-  );
+  )
 }
 
-export default TilesContainer;
+export default TilesContainer

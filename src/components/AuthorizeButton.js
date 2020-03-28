@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
-import { store } from "../state/Store";
-import styled from "styled-components";
+import React, { useContext } from 'react'
+import styled from 'styled-components'
+import { store } from '../state/Stores'
 
 const StyledButton = styled.button`
   background-color: ${props => props.theme.colors.lightGray};
@@ -23,29 +23,29 @@ const StyledButton = styled.button`
       background-color: ${props => props.theme.colors.spotifyGreenHover};
     }
   }
-`;
+`
 
-const clientId = "50d55bc1f9274bcb949c49e24214a22e";
-const redirectUri = "https://015fa7e8.eu.ngrok.io/callback";
+const clientId = '50d55bc1f9274bcb949c49e24214a22e'
+const redirectUri = window.location.origin + '/callback'
 
 const url = `https://accounts.spotify.com/authorize?
 client_id=${clientId}&
 redirect_uri=${encodeURI(redirectUri)}&
-response_type=token`;
+response_type=token`
 
-function AuthorizeButton() {
+function AuthorizeButton () {
   const {
     state: { apiToken }
-  } = useContext(store);
+  } = useContext(store)
   const onClick = () => {
-    window.location.assign(url);
-  };
+    window.location.assign(url)
+  }
 
   return (
     <StyledButton disabled={Boolean(apiToken)} onClick={onClick}>
       Sign In On Spotify
     </StyledButton>
-  );
+  )
 }
 
-export default AuthorizeButton;
+export default AuthorizeButton

@@ -1,20 +1,22 @@
-import React, { useRef, useContext, useEffect, useState } from "react";
-import { store } from "../state/Store";
-import styled from "styled-components";
+import React, { useRef, useContext, useEffect, useState } from 'react'
+import { store } from '../state/Stores'
+import styled from 'styled-components'
 import {
   setIsPlaying,
   setLastSelectedTile,
-  setIsPlayingRef
-} from "../state/Actions";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import theme from "../theme";
+  setIsPlayingRef,
+  setSolved
+} from '../state/Actions'
+import { CircularProgressbar } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css'
+import theme from '../theme'
 
 const StyledWrapper = styled.div`
   border: 1px solid;
   border-color: ${({ playing, theme }) =>
-    playing ? "red" : theme.colors.lightGray};
+    playing ? 'red' : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
+  background-color: ${({ trackData }) => trackData.solved ? 'green' : 'white'};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
@@ -38,18 +40,19 @@ const StyledWrapper = styled.div`
     transform: scale(1.05);
     color: rgba(0, 0, 0, 0.6);
     border-color: ${({ playing, theme }) =>
-      playing ? "red" : theme.colors.darkGray};
+      playing ? 'red' : theme.colors.darkGray};
   }
-`;
+`
 
-function Tile({ number = 12, trackData }) {
-  const audioElementRef = useRef(null);
+function Tile (props) {
+  const { number = 12, trackData } = props
+  const audioElementRef = useRef(null)
   const {
     dispatch,
     state: { lastSelectedTile, tracks, isPlaying, isPlayingRef }
-  } = useContext(store);
-  const [progress, setProgress] = useState(0);
-  const tileIsPlaying = isPlaying === number;
+  } = useContext(store)
+  const [progress, setProgress] = useState(0)
+  const tileIsPlaying = isPlaying === number
 
   // Update circle progress every 200ms
   useEffect(() => {
@@ -61,39 +64,37 @@ function Tile({ number = 12, trackData }) {
               audioElementRef.current.duration
           ),
         200
-      );
+      )
     }
-  }, [tileIsPlaying]);
+  }, [tileIsPlaying])
 
   // Attach "ended" listener to reset state after song has finished playing
   useEffect(() => {
     if (audioElementRef.current) {
-      audioElementRef.current.addEventListener("ended", () => {
-        dispatch(setIsPlayingRef(null));
-        dispatch(setIsPlaying(false));
-        console.log("Ended Playing");
-      });
+      audioElementRef.current.addEventListener('ended', () => {
+        dispatch(setIsPlayingRef(null))
+        dispatch(setIsPlaying(false))
+      })
     }
-  }, [audioElementRef, dispatch]);
+  }, [audioElementRef, dispatch])
 
   const startPlaying = () => {
-    dispatch(setLastSelectedTile(number));
-    dispatch(setIsPlayingRef(audioElementRef));
-    dispatch(setIsPlaying(number));
-    audioElementRef.current.play();
-    console.log("Play ", number);
-  };
+    dispatch(setLastSelectedTile(number))
+    dispatch(setIsPlayingRef(audioElementRef))
+    dispatch(setIsPlaying(number))
+    audioElementRef.current.play()
+  }
 
   const stopPlayingAndReset = () => {
-    dispatch(setIsPlaying(false));
-    dispatch(setIsPlayingRef(null));
-    audioElementRef.current.pause();
-    audioElementRef.current.currentTime = 0;
-    console.log("Stop and reset playing ", number);
-  };
+    dispatch(setIsPlaying(false))
+    dispatch(setIsPlayingRef(null))
+    audioElementRef.current.pause()
+    audioElementRef.current.currentTime = 0
+  }
 
   return (
     <StyledWrapper
+      {...props}
       playing={tileIsPlaying}
       onClick={() => {
         lastSelectedTile &&
@@ -101,29 +102,31 @@ function Tile({ number = 12, trackData }) {
             `Last Selected Tile: ${lastSelectedTile} – id: ${
               tracks[lastSelectedTile - 1].id
             }`
-          );
-        console.log(`Selected Tile: ${number} – id: ${tracks[number - 1].id}`);
+          )
+        console.log(`Selected Tile: ${number} – id: ${tracks[number - 1].id}`)
         if (
           lastSelectedTile &&
           lastSelectedTile !== number &&
           tracks[lastSelectedTile - 1].id === tracks[number - 1].id
         ) {
-          console.warn("Found a pair");
+          console.warn('Found a pair')
+          dispatch(setSolved(number - 1))
+          dispatch(setSolved(lastSelectedTile - 1))
         }
         // No song is playing, yet
         if (!isPlaying) {
           // Start Playback
-          startPlaying();
+          startPlaying()
         } else {
           // Tile is alreay playing -> click again to stop
           if (tileIsPlaying) {
             // Stop Playback
-            stopPlayingAndReset();
+            stopPlayingAndReset()
           } else {
             // Stop other tile from playing and play
-            isPlayingRef.current.pause();
-            isPlayingRef.current.currentTime = 0;
-            startPlaying();
+            isPlayingRef.current.pause()
+            isPlayingRef.current.currentTime = 0
+            startPlaying()
           }
         }
       }}
@@ -143,15 +146,15 @@ function Tile({ number = 12, trackData }) {
               styles={{
                 path: {
                   stroke: `${theme.colors.darkGray}`,
-                  strokeLinecap: "butt"
+                  strokeLinecap: 'butt'
                 },
                 trail: {
                   stroke: `${theme.colors.lightGray}`,
-                  strokeLinecap: "butt"
+                  strokeLinecap: 'butt'
                 },
                 text: {
                   fill: `${theme.colors.darkGray}`,
-                  fontSize: "2.5rem"
+                  fontSize: '2.5rem'
                 }
               }}
             />
@@ -159,7 +162,7 @@ function Tile({ number = 12, trackData }) {
         </>
       )}
     </StyledWrapper>
-  );
+  )
 }
 
-export default Tile;
+export default Tile
