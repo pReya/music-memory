@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import Tile from './Tile'
 import styled from 'styled-components'
-import { store } from '../state/Stores'
+import { Store } from '../state/Stores'
 import { setTracks } from '../state/Actions'
 
 const StyledContainer = styled.div`
@@ -23,7 +23,7 @@ const shuffleArray = array => {
 }
 
 function TilesContainer ({ count: tilesCount = 9 }) {
-  const { state, dispatch } = useContext(store)
+  const { state, dispatch } = useContext(Store)
 
   // Modify state.tracks from raw API result to filtered, randomized and shortened array
   useEffect(() => {
@@ -45,7 +45,7 @@ function TilesContainer ({ count: tilesCount = 9 }) {
   return (
     <StyledContainer>
       {Boolean(state.tracks.length) && state.tracks.map((track, i) => (
-        <Tile key={i + 1} number={i + 1} trackData={track} />
+        <Tile key={i + 1} number={i + 1} />
       ))}
     </StyledContainer>
   )

@@ -1,12 +1,7 @@
-import React, { useRef, useContext, useEffect, useState } from 'react'
-import { store } from '../state/Stores'
+import React, { useContext, useEffect, useState } from 'react'
+import { Store } from '../state/Stores'
 import styled from 'styled-components'
-import {
-  setIsPlaying,
-  setLastSelectedTile,
-  setIsPlayingRef,
-  setSolved
-} from '../state/Actions'
+import { startOrPausePlayback } from '../state/Actions'
 import { CircularProgressbar } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import theme from '../theme'
@@ -16,7 +11,8 @@ const StyledWrapper = styled.div`
   border-color: ${({ selected, theme }) =>
     selected ? 'red' : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
-  background-color: ${({ trackData, theme }) => trackData.solved ? theme.colors.spotifyGreen : 'white'};
+  background-color: ${({ solved, theme }) =>
+    solved.solved ? theme.colors.spotifyGreen : 'white'};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
@@ -45,15 +41,15 @@ const StyledWrapper = styled.div`
 `
 
 function Tile (props) {
-  const { number, trackData } = props
-  const audioElementRef = useRef(null)
+  const { number } = props
   const {
     dispatch,
-    state: { lastSelectedTile, tracks, isPlaying, isPlayingRef }
-  } = useContext(store)
+    state: { lastSelectedTile, isPlaying, playerRef, tracks }
+  } = useContext(Store)
   const [progress, setProgress] = useState(0)
   const tileIsPlaying = isPlaying === number
   const selected = lastSelectedTile === number
+  const solved = tracks[number - 1].solved
 
   // Update circle progress every 200ms
   useEffect(() => {
@@ -61,109 +57,41 @@ function Tile (props) {
       setInterval(
         () =>
           setProgress(
-            audioElementRef.current.currentTime /
-              audioElementRef.current.duration
+            playerRef.current.currentTime / playerRef.current.duration
           ),
         200
       )
     }
-  }, [tileIsPlaying])
-
-  // Attach "ended" listener to reset state after song has finished playing
-  useEffect(() => {
-    if (audioElementRef.current) {
-      audioElementRef.current.addEventListener('ended', () => {
-        dispatch(setIsPlayingRef(null))
-        dispatch(setIsPlaying(false))
-      })
-      audioElementRef.current.volume = 0.3
-    }
-  }, [audioElementRef, dispatch])
-
-  const startPlaying = () => {
-    dispatch(setIsPlayingRef(audioElementRef))
-    dispatch(setIsPlaying(number))
-    audioElementRef.current.play()
-  }
-
-  const stopPlayingAndReset = () => {
-    dispatch(setIsPlaying(false))
-    dispatch(setIsPlayingRef(null))
-    dispatch(setLastSelectedTile(number))
-    audioElementRef.current.pause()
-    audioElementRef.current.currentTime = 0
-  }
+  }, [tileIsPlaying, playerRef])
 
   return (
     <StyledWrapper
-      {...props}
+      solved={solved}
       selected={tileIsPlaying || selected}
-      onClick={() => {
-        lastSelectedTile &&
-          console.log(
-            `Last Selected Tile: ${lastSelectedTile} – id: ${
-              tracks[lastSelectedTile - 1].id
-            }`
-          )
-        console.log(`Selected Tile: ${number} – id: ${tracks[number - 1].id}`)
-        if (
-          lastSelectedTile &&
-          lastSelectedTile !== number &&
-          tracks[lastSelectedTile - 1].id === tracks[number - 1].id
-        ) {
-          console.warn('Found a pair')
-          dispatch(setSolved(number - 1))
-          dispatch(setSolved(lastSelectedTile - 1))
-        }
-        // No song is playing, yet
-        if (!isPlaying) {
-          // Start Playback
-          startPlaying()
-        } else {
-          // Tile is alreay playing -> click again to stop
-          if (tileIsPlaying) {
-            // Stop Playback
-            stopPlayingAndReset()
-            dispatch(setLastSelectedTile(number))
-          } else {
-            // Stop other tile from playing and play
-            isPlayingRef.current.pause()
-            isPlayingRef.current.currentTime = 0
-            startPlaying()
-          }
-        }
-      }}
+      onClick={() => dispatch(startOrPausePlayback(number))}
     >
-      {!tileIsPlaying && <div>{String(number)}</div>}
-      {trackData && (
-        <>
-          <audio src={trackData.preview_url} ref={audioElementRef}>
-            Your browser does not support the
-            <code>audio</code> element.
-          </audio>
-          {tileIsPlaying && (
-            <CircularProgressbar
-              value={progress}
-              text={number}
-              maxValue={1}
-              styles={{
-                path: {
-                  stroke: `${theme.colors.darkGray}`,
-                  strokeLinecap: 'butt'
-                },
-                trail: {
-                  stroke: `${theme.colors.lightGray}`,
-                  strokeLinecap: 'butt'
-                },
-                text: {
-                  fill: `${theme.colors.darkGray}`,
-                  fontSize: '2.5rem'
-                }
-              }}
-            />
-          )}
-        </>
-      )}
+
+      {tileIsPlaying ? (
+        <CircularProgressbar
+          value={progress}
+          text={number}
+          maxValue={1}
+          styles={{
+            path: {
+              stroke: `${theme.colors.darkGray}`,
+              strokeLinecap: 'butt'
+            },
+            trail: {
+              stroke: `${theme.colors.lightGray}`,
+              strokeLinecap: 'butt'
+            },
+            text: {
+              fill: `${theme.colors.darkGray}`,
+              fontSize: '2.5rem'
+            }
+          }}
+        />
+      ) : (<div>{String(number)}</div>)}
     </StyledWrapper>
   )
 }

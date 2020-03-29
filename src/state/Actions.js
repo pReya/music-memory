@@ -3,7 +3,7 @@ export const actionTypes = {
   SET_TRACKS: 'SET_TRACKS',
   SET_IS_PLAYING: 'SET_IS_PLAYING',
   SET_LAST_SELECTED_TILE: 'SET_LAST_SELECTED_TILE',
-  SET_IS_PLAYING_REF: 'SET_IS_PLAYING_REF',
+  SET_PLAYER_REF: 'SET_PLAYER_REF',
   SET_SOLVED: 'SET_SOLVED'
 }
 
@@ -14,9 +14,9 @@ export function setLastSelectedTile (tile) {
   }
 }
 
-export function setIsPlayingRef (ref) {
+export function setPlayerRef (ref) {
   return {
-    type: actionTypes.SET_IS_PLAYING_REF,
+    type: actionTypes.SET_PLAYER_REF,
     ref
   }
 }
@@ -49,6 +49,16 @@ export function setSolved (track) {
     track
   }
 }
+export function startOrPausePlayback (track) {
+  return (dispatch, getState) => {
+    const state = getState()
+    if (state.isPlaying === track) {
+      dispatch(setIsPlaying(false))
+    } else {
+      dispatch(setIsPlaying(track))
+    }
+  }
+}
 
 export function fetchData (endpoint, token) {
   return async (dispatch, getState) => {
@@ -68,7 +78,6 @@ export function fetchData (endpoint, token) {
           }
       )
       .filter(Boolean)
-    console.log('Filtered Data', filteredData)
     dispatch(setTracks(filteredData))
   }
 }
