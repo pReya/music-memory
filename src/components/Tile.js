@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Store } from '../state/Stores'
 import styled from 'styled-components'
 import { startOrPausePlayback } from '../state/Actions'
@@ -12,7 +12,7 @@ const StyledWrapper = styled.div`
     selected ? 'red' : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
   background-color: ${({ solved, theme }) =>
-    solved.solved ? theme.colors.spotifyGreen : 'white'};
+    solved ? theme.colors.spotifyGreen : 'white'};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
@@ -44,25 +44,11 @@ function Tile (props) {
   const { number } = props
   const {
     dispatch,
-    state: { lastSelectedTile, isPlaying, playerRef, tracks }
+    state: { lastSelectedTile, isPlaying, progress, tracks, lastPlayed }
   } = useContext(Store)
-  const [progress, setProgress] = useState(0)
-  const tileIsPlaying = isPlaying === number
+  const tileIsPlaying = (isPlaying && lastPlayed === number)
   const selected = lastSelectedTile === number
   const solved = tracks[number - 1].solved
-
-  // Update circle progress every 200ms
-  useEffect(() => {
-    if (tileIsPlaying) {
-      setInterval(
-        () =>
-          setProgress(
-            playerRef.current.currentTime / playerRef.current.duration
-          ),
-        200
-      )
-    }
-  }, [tileIsPlaying, playerRef])
 
   return (
     <StyledWrapper
@@ -70,7 +56,6 @@ function Tile (props) {
       selected={tileIsPlaying || selected}
       onClick={() => dispatch(startOrPausePlayback(number))}
     >
-
       {tileIsPlaying ? (
         <CircularProgressbar
           value={progress}
@@ -91,7 +76,9 @@ function Tile (props) {
             }
           }}
         />
-      ) : (<div>{String(number)}</div>)}
+      ) : (
+        <div>{String(number)}</div>
+      )}
     </StyledWrapper>
   )
 }

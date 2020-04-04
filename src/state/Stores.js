@@ -4,13 +4,12 @@ import { createReducer } from 'react-use'
 import thunk from 'redux-thunk'
 
 const initialState = {
-  apiToken: '',
-  apiExpiration: 0,
   tracks: [],
   tiles: 9,
   isPlaying: false,
-  playerRef: null,
-  lastSelectedTile: null
+  progress: 0,
+  currentlyPlayed: null,
+  lastPlayed: null
 }
 
 const middlewares = [thunk]
@@ -18,9 +17,9 @@ const middlewares = [thunk]
 if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require('redux-logger')
   const logger = createLogger({
+    predicate: (getState, action) => action.type !== actionTypes.SET_PROGRESS,
     collapsed: (getState, action, logEntry) => !logEntry.error,
-    timestamp: false,
-    diff: true
+    timestamp: false
   })
   middlewares.push(logger)
 }
@@ -32,28 +31,23 @@ export const Store = createContext(initialState)
 const StoreProvider = ({ children }) => {
   const [state, dispatch] = useThunkReducer((state, action) => {
     switch (action.type) {
-      case actionTypes.SET_API_INFO: {
-        return { ...state, apiToken: action.token, apiExpiration: action.expiration }
-      }
       case actionTypes.SET_TRACKS: {
         return { ...state, tracks: action.tracks }
       }
       case actionTypes.SET_SOLVED: {
         const clonedTracks = JSON.parse(JSON.stringify(state.tracks))
-        clonedTracks[action.track].solved = true
+        clonedTracks[action.track - 1].solved = true
         const newState = { ...state, tracks: clonedTracks }
-        console.log(newState)
         return newState
       }
+      case actionTypes.SET_PROGRESS: {
+        return { ...state, progress: action.progress }
+      }
+      case actionTypes.SET_LAST_PLAYED: {
+        return { ...state, lastPlayed: action.id }
+      }
       case actionTypes.SET_IS_PLAYING: {
-        return { ...state, isPlaying: action.id }
-      }
-      case actionTypes.SET_PLAYER_REF: {
-        return { ...state, playerRef: action.ref }
-      }
-      case actionTypes.SET_LAST_SELECTED_TILE: {
-        console.log('SET_LAST_SELECTED_TILE REDUCER', action.tile)
-        return { ...state, lastSelectedTile: action.tile }
+        return { ...state, isPlaying: action.isPlaying }
       }
 
       default:
