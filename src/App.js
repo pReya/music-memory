@@ -3,9 +3,10 @@ import { Route, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import TilesContainer from './components/TilesContainer'
 import AuthorizeButton from './components/AuthorizeButton'
-import { store } from './state/Stores'
+import { Store } from './state/Stores'
 import { fetchData } from './state/Actions'
 import qs from 'query-string'
+import Player from './components/Player'
 
 const StyledApp = styled.div`
   box-sizing: border-box;
@@ -16,7 +17,7 @@ const StyledApp = styled.div`
 `
 
 export default function App () {
-  const { state, dispatch } = useContext(store)
+  const { state, dispatch } = useContext(Store)
   const history = useHistory()
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function App () {
         <AuthorizeButton />
 
         <TilesContainer count={state.tiles} />
+        {Boolean(state.tracks.length) && <Player />}
       </StyledApp>
     </>
   )

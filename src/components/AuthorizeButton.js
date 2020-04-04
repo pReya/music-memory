@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { store } from '../state/Stores'
+import { Store } from '../state/Stores'
 
 const StyledButton = styled.button`
   background-color: ${props => props.theme.colors.lightGray};
@@ -36,7 +36,7 @@ response_type=token`
 function AuthorizeButton () {
   const {
     state: { tracks }
-  } = useContext(store)
+  } = useContext(Store)
   const userIsNotAuthorized = tracks.length === 0
   const onClick = () => {
     window.location.assign(url)
