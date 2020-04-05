@@ -5,7 +5,8 @@ export const actionTypes = {
   SET_IS_PLAYING: 'SET_IS_PLAYING',
   SET_LAST_PLAYED: 'SET_LAST_PLAYED',
   SET_PROGRESS: 'SET_PROGRESS',
-  SET_SOLVED: 'SET_SOLVED'
+  SET_SOLVED: 'SET_SOLVED',
+  INCREMENT_MOVE_COUNTER: 'INCREMENT_MOVE_COUNTER'
 }
 
 export function setProgress (progress) {
@@ -42,9 +43,17 @@ export function setSolved (track) {
     track
   }
 }
+
+export function incrementMoveCounter () {
+  return {
+    type: actionTypes.INCREMENT_MOVE_COUNTER
+  }
+}
+
 export function startOrPausePlayback (track) {
   return (dispatch, getState) => {
     const { tracks, isPlaying, lastPlayed } = getState()
+    // Logic to check if a pair has been found
     if (lastPlayed && (lastPlayed !== track)) {
       if (tracks[lastPlayed - 1].id === tracks[track - 1].id) {
         dispatch(setSolved(lastPlayed))
@@ -59,6 +68,7 @@ export function startOrPausePlayback (track) {
         dispatch(setIsPlaying(false))
       } else {
         // Some other song is playing -> Switch song
+        dispatch(incrementMoveCounter())
         dispatch(setLastPlayed(track))
       }
     } else {
@@ -66,6 +76,7 @@ export function startOrPausePlayback (track) {
       console.log('No song is playing -> Start playing')
       dispatch(setIsPlaying(true))
       dispatch(setLastPlayed(track))
+      dispatch(incrementMoveCounter())
     }
   }
 }

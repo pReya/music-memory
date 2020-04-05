@@ -17,12 +17,10 @@ function Player () {
       const handleSongEnded = () => {
         dispatch(setIsPlaying(false))
       }
-      console.log('Attach')
       ref.addEventListener('ended', handleSongEnded)
       ref.volume = 0.3
 
       return () => {
-        console.log('Remove')
         ref.removeEventListener('ended', handleSongEnded)
       }
     }

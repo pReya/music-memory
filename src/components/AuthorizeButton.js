@@ -30,7 +30,7 @@ const redirectUri = window.location.origin + '/callback'
 
 const url = `https://accounts.spotify.com/authorize?
 client_id=${clientId}&
-redirect_uri=${encodeURI(redirectUri)}&
+redirect_uri=${encodeURIComponent(redirectUri)}&
 response_type=token`
 
 function AuthorizeButton () {

@@ -8,8 +8,8 @@ const initialState = {
   tiles: 9,
   isPlaying: false,
   progress: 0,
-  currentlyPlayed: null,
-  lastPlayed: null
+  lastPlayed: null,
+  moveCounter: 0
 }
 
 const middlewares = [thunk]
@@ -49,7 +49,9 @@ const StoreProvider = ({ children }) => {
       case actionTypes.SET_IS_PLAYING: {
         return { ...state, isPlaying: action.isPlaying }
       }
-
+      case actionTypes.INCREMENT_MOVE_COUNTER: {
+        return { ...state, moveCounter: state.moveCounter + 1 }
+      }
       default:
         throw new Error()
     }

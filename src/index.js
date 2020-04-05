@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import StoreProvider from './state/Stores'
 import theme from './theme'
 
@@ -11,11 +11,11 @@ const rootElement = document.getElementById('root')
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <HashRouter>
+      <Router>
         <StoreProvider>
           <App />
         </StoreProvider>
-      </HashRouter>
+      </Router>
     </ThemeProvider>
   </React.StrictMode>,
   rootElement
