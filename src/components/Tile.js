@@ -44,10 +44,10 @@ function Tile (props) {
   const { number } = props
   const {
     dispatch,
-    state: { lastSelectedTile, isPlaying, progress, tracks, lastPlayed }
+    state: { lastPlayed, isPlaying, progress, tracks }
   } = useContext(Store)
   const tileIsPlaying = (isPlaying && lastPlayed === number)
-  const selected = lastSelectedTile === number
+  const selected = (lastPlayed === number)
   const solved = tracks[number - 1].solved
 
   return (

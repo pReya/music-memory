@@ -9,7 +9,8 @@ const initialState = {
   isPlaying: false,
   progress: 0,
   lastPlayed: null,
-  moveCounter: 0
+  moveCounter: 0,
+  pairCounter: 0
 }
 
 const middlewares = [thunk]
@@ -51,6 +52,9 @@ const StoreProvider = ({ children }) => {
       }
       case actionTypes.INCREMENT_MOVE_COUNTER: {
         return { ...state, moveCounter: state.moveCounter + 1 }
+      }
+      case actionTypes.INCREMENT_PAIR_COUNTER: {
+        return { ...state, pairCounter: state.pairCounter + 1 }
       }
       default:
         throw new Error()

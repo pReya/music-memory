@@ -48,7 +48,8 @@ export default function App () {
       <StyledApp>
         <h1>Music Memory</h1>
         <AuthorizeButton />
-
+        {state.tracks.length !== 0 &&
+          <h2>Moves: {Math.floor(state.moveCounter / 2)} – Pairs: {state.pairCounter}</h2>}
         <TilesContainer count={state.tiles} />
         {Boolean(state.tracks.length) && <Player />}
       </StyledApp>
