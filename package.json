@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "clsx": "^1.1.0",
+    "logrocket": "^1.0.7",
     "query-string": "^6.11.1",
     "react": "^16.13.1",
     "react-circular-progressbar": "^2.0.3",

@@ -2,10 +2,11 @@ import React, { createContext } from 'react'
 import { actionTypes } from './Actions'
 import { createReducer } from 'react-use'
 import thunk from 'redux-thunk'
+import LogRocket from 'logrocket'
 
 const initialState = {
   tracks: [],
-  tiles: 9,
+  tiles: 40,
   isPlaying: false,
   progress: 0,
   lastPlayed: null,
@@ -13,7 +14,16 @@ const initialState = {
   pairCounter: 0
 }
 
-const middlewares = [thunk]
+const logrocket = LogRocket.reduxMiddleware({
+  actionSanitizer: (action) => {
+    if (action.type === actionTypes.SET_PROGRESS) {
+      return null
+    }
+    return action
+  }
+})
+
+const middlewares = [thunk, logrocket]
 
 if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require('redux-logger')

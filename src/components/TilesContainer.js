@@ -8,8 +8,8 @@ const StyledContainer = styled.div`
   font-family: sans-serif;
   display: flex;
   flex-wrap: wrap;
-  max-width: 700px;
-  margin: 40px auto;
+  max-width: 900px;
+  margin: 20px auto;
 `
 
 function TilesContainer ({ count }) {

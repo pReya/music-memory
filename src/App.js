@@ -28,7 +28,7 @@ export default function App () {
       const nowTimeStampSeconds = Math.floor(Date.now() / 1000)
       const tokenIsNotExpired = (storageExpirationTimestampSeconds - nowTimeStampSeconds) > 0
       if (storageToken && storageExpirationTimestampSeconds && tokenIsNotExpired) {
-        dispatch(fetchData('playlists/0D5oNpkqZxdmklYvWwDKYI', storageToken))
+        dispatch(fetchData('playlists/37i9dQZF1DX4o1oenSJRJd', storageToken))
       }
     }
   }, [dispatch, state])
