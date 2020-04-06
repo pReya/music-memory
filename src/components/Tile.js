@@ -11,13 +11,14 @@ const StyledWrapper = styled.div`
   border-color: ${({ selected, theme }) =>
     selected ? 'red' : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
+  ${'' /* background: ${({ solved, theme, bgImage }) =>
+    solved ? `url('${bgImage}')` : 'white'}; */}
   background-color: ${({ solved, theme }) =>
     solved ? theme.colors.spotifyGreen : 'white'};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
   height: 150px;
-  font-size: 2.5em;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -38,6 +39,21 @@ const StyledWrapper = styled.div`
     border-color: ${({ selected, theme }) =>
       selected ? 'red' : theme.colors.darkGray};
   }
+
+  .unsolved {
+    font-size: 2.5em;
+    ${'' /* background-color: ${({ solved, theme }) =>
+    solved ? theme.colors.spotifyGreen : 'white'}; */}
+  }
+
+  .solved {
+    font-size: 1em;
+    ${'' /* position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: ${({ theme }) => theme.colors.spotifyGreen + '80'}; */}
+  }
 `
 
 function Tile (props) {
@@ -46,18 +62,21 @@ function Tile (props) {
     dispatch,
     state: { lastPlayed, isPlaying, progress, tracks }
   } = useContext(Store)
-  const tileIsPlaying = (isPlaying && lastPlayed === number)
-  const selected = (lastPlayed === number)
+  const tileIsPlaying = isPlaying && lastPlayed === number
+  const selected = lastPlayed === number
   const solved = tracks[number - 1].solved
 
   return (
     <StyledWrapper
+      bgImage={tracks[number - 1].images[1].url}
       solved={solved}
       selected={tileIsPlaying || selected}
-      onClick={() => dispatch(startOrPausePlayback(number))}
+      onClick={() =>
+        (!solved || isPlaying) && dispatch(startOrPausePlayback(number))}
     >
       {tileIsPlaying ? (
         <CircularProgressbar
+          className='unsolved'
           value={progress}
           text={number}
           maxValue={1}
@@ -77,7 +96,16 @@ function Tile (props) {
           }}
         />
       ) : (
-        <div>{String(number)}</div>
+        <>
+          {solved ? (
+            <div className='solved'>
+              <div>{tracks[number - 1].artist}</div>
+              <div>{tracks[number - 1].name}</div>
+            </div>
+          ) : (
+            <div className='unsolved'>{String(number)}</div>
+          )}
+        </>
       )}
     </StyledWrapper>
   )

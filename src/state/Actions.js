@@ -90,13 +90,13 @@ export function startOrPausePlayback (track) {
   }
 }
 
-export function fetchData (endpoint, token) {
+export function fetchPlaylistData (id, token) {
   return async (dispatch, getState) => {
     const { tiles } = getState()
     // Tracks array length of count (if count is even) or count+1 (if count is odd) -> tracksArrayLength is always even
     const tracksArrayLength = tiles % 2 === 0 ? tiles : tiles + 1
 
-    const data = await window.fetch('https://api.spotify.com/v1/' + endpoint, {
+    const data = await window.fetch('https://api.spotify.com/v1/playlists/' + id + '?fields=name,tracks(total,limit,items(track(id,name,preview_url,artists(name),album(images))))', {
       headers: {
         Authorization: 'Bearer ' + token
       }
@@ -110,6 +110,9 @@ export function fetchData (endpoint, token) {
           trackObject.track.preview_url && {
             id: trackObject.track.id,
             preview_url: trackObject.track.preview_url,
+            name: trackObject.track.name,
+            artist: trackObject.track.artists[0].name,
+            images: trackObject.track.album.images,
             solved: false
           }
       )

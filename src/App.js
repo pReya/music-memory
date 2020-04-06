@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import TilesContainer from './components/TilesContainer'
 import AuthorizeButton from './components/AuthorizeButton'
 import { Store } from './state/Stores'
-import { fetchData } from './state/Actions'
+import { fetchPlaylistData } from './state/Actions'
 import qs from 'query-string'
 import Player from './components/Player'
 
@@ -28,7 +28,7 @@ export default function App () {
       const nowTimeStampSeconds = Math.floor(Date.now() / 1000)
       const tokenIsNotExpired = (storageExpirationTimestampSeconds - nowTimeStampSeconds) > 0
       if (storageToken && storageExpirationTimestampSeconds && tokenIsNotExpired) {
-        dispatch(fetchData('playlists/37i9dQZF1DX4o1oenSJRJd', storageToken))
+        dispatch(fetchPlaylistData('37i9dQZF1DX4o1oenSJRJd', storageToken))
       }
     }
   }, [dispatch, state])

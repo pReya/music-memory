@@ -6,7 +6,7 @@ import LogRocket from 'logrocket'
 
 const initialState = {
   tracks: [],
-  tiles: 40,
+  tiles: 9,
   isPlaying: false,
   progress: 0,
   lastPlayed: null,
