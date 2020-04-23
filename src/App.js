@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import TilesContainer from './components/TilesContainer'
 import AuthorizeButton from './components/AuthorizeButton'
 import { Store } from './state/Stores'
-import { fetchPlaylistData } from './state/Actions'
+import { initializeApi } from './state/Actions'
 import qs from 'query-string'
 import Player from './components/Player'
+import PlaylistSelector from './components/PlaylistSelector'
 
 const StyledApp = styled.div`
   box-sizing: border-box;
@@ -23,13 +24,7 @@ export default function App () {
   useEffect(() => {
     // No data has been fetched, yet
     if (state.tracks.length === 0) {
-      const storageToken = window.localStorage.getItem('token')
-      const storageExpirationTimestampSeconds = window.localStorage.getItem('expirationTimestampSeconds')
-      const nowTimeStampSeconds = Math.floor(Date.now() / 1000)
-      const tokenIsNotExpired = (storageExpirationTimestampSeconds - nowTimeStampSeconds) > 0
-      if (storageToken && storageExpirationTimestampSeconds && tokenIsNotExpired) {
-        dispatch(fetchPlaylistData('37i9dQZF1DX4o1oenSJRJd', storageToken))
-      }
+      dispatch(initializeApi())
     }
   }, [dispatch, state])
 
@@ -48,6 +43,7 @@ export default function App () {
       <StyledApp>
         <h1>Music Memory</h1>
         <AuthorizeButton />
+        <PlaylistSelector />
         {state.tracks.length !== 0 &&
           <h2>Moves: {Math.floor(state.moveCounter / 2)} – Pairs: {state.pairCounter}</h2>}
         <TilesContainer count={state.tiles} />

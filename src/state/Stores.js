@@ -11,7 +11,15 @@ const initialState = {
   progress: 0,
   lastPlayed: null,
   moveCounter: 0,
-  pairCounter: 0
+  pairCounter: 0,
+  playlistIds: [
+    "37i9dQZF1DXbTxeAdrVG2l",
+    "37i9dQZF1DX802IXCAaWtY",
+    "37i9dQZF1DX4o1oenSJRJd",
+    "37i9dQZF1DX3oM43CtKnRV",
+    "37i9dQZF1DX0Ew6u9sRtTY",
+    "37i9dQZF1DX5Ejj0EkURtP"
+  ]
 }
 
 const logrocket = LogRocket.reduxMiddleware({

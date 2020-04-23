@@ -1,72 +1,72 @@
-import { shuffleArray } from '../util/helpers'
+import { shuffleArray } from "../util/helpers";
 
 export const actionTypes = {
-  SET_TRACKS: 'SET_TRACKS',
-  SET_IS_PLAYING: 'SET_IS_PLAYING',
-  SET_LAST_PLAYED: 'SET_LAST_PLAYED',
-  SET_PROGRESS: 'SET_PROGRESS',
-  SET_SOLVED: 'SET_SOLVED',
-  INCREMENT_MOVE_COUNTER: 'INCREMENT_MOVE_COUNTER',
-  INCREMENT_PAIR_COUNTER: 'INCREMENT_PAIR_COUNTER'
-}
+  SET_TRACKS: "SET_TRACKS",
+  SET_IS_PLAYING: "SET_IS_PLAYING",
+  SET_LAST_PLAYED: "SET_LAST_PLAYED",
+  SET_PROGRESS: "SET_PROGRESS",
+  SET_SOLVED: "SET_SOLVED",
+  INCREMENT_MOVE_COUNTER: "INCREMENT_MOVE_COUNTER",
+  INCREMENT_PAIR_COUNTER: "INCREMENT_PAIR_COUNTER",
+};
 
-export function setProgress (progress) {
+export function setProgress(progress) {
   return {
     type: actionTypes.SET_PROGRESS,
-    progress
-  }
+    progress,
+  };
 }
 
-export function setIsPlaying (isPlaying) {
+export function setIsPlaying(isPlaying) {
   return {
     type: actionTypes.SET_IS_PLAYING,
-    isPlaying
-  }
+    isPlaying,
+  };
 }
 
-export function setLastPlayed (id) {
+export function setLastPlayed(id) {
   return {
     type: actionTypes.SET_LAST_PLAYED,
-    id
-  }
+    id,
+  };
 }
 
-export function setTracks (tracks) {
+export function setTracks(tracks) {
   return {
     type: actionTypes.SET_TRACKS,
-    tracks
-  }
+    tracks,
+  };
 }
 
-export function setSolved (track) {
+export function setSolved(track) {
   return {
     type: actionTypes.SET_SOLVED,
-    track
-  }
+    track,
+  };
 }
 
-export function incrementMoveCounter () {
+export function incrementMoveCounter() {
   return {
-    type: actionTypes.INCREMENT_MOVE_COUNTER
-  }
+    type: actionTypes.INCREMENT_MOVE_COUNTER,
+  };
 }
 
-export function incrementPairCounter () {
+export function incrementPairCounter() {
   return {
-    type: actionTypes.INCREMENT_PAIR_COUNTER
-  }
+    type: actionTypes.INCREMENT_PAIR_COUNTER,
+  };
 }
 
-export function startOrPausePlayback (track) {
+export function startOrPausePlayback(track) {
   return (dispatch, getState) => {
-    const { tracks, isPlaying, lastPlayed, moveCounter } = getState()
+    const { tracks, isPlaying, lastPlayed, moveCounter } = getState();
     // Logic to check if a pair has been found
-    if (lastPlayed && (lastPlayed !== track) && (moveCounter % 2 !== 0)) {
-      console.log('Checking if a pair has been found')
+    if (lastPlayed && lastPlayed !== track && moveCounter % 2 !== 0) {
+      console.log("Checking if a pair has been found");
       if (tracks[lastPlayed - 1].id === tracks[track - 1].id) {
-        dispatch(setSolved(lastPlayed))
-        dispatch(setSolved(track))
-        dispatch(incrementPairCounter())
+        dispatch(setSolved(lastPlayed));
+        dispatch(setSolved(track));
+        dispatch(incrementPairCounter());
       }
     }
 
@@ -74,34 +74,39 @@ export function startOrPausePlayback (track) {
       // Some song is playing
       if (lastPlayed === track) {
         // Same song is playing -> Pause
-        dispatch(setIsPlaying(false))
+        dispatch(setIsPlaying(false));
       } else {
         // Some other song is playing -> Switch song
-        dispatch(incrementMoveCounter())
-        dispatch(setLastPlayed(track))
+        dispatch(incrementMoveCounter());
+        dispatch(setLastPlayed(track));
       }
     } else {
       // No song is playing -> Start playing
-      console.log('No song is playing -> Start playing')
-      dispatch(setIsPlaying(true))
-      dispatch(setLastPlayed(track))
-      dispatch(incrementMoveCounter())
+      console.log("No song is playing -> Start playing");
+      dispatch(setIsPlaying(true));
+      dispatch(setLastPlayed(track));
+      dispatch(incrementMoveCounter());
     }
-  }
+  };
 }
 
-export function fetchPlaylistData (id, token) {
+export function fetchPlaylistData(id, token) {
   return async (dispatch, getState) => {
-    const { tiles } = getState()
+    const { tiles } = getState();
     // Tracks array length of count (if count is even) or count+1 (if count is odd) -> tracksArrayLength is always even
-    const tracksArrayLength = tiles % 2 === 0 ? tiles : tiles + 1
+    const tracksArrayLength = tiles % 2 === 0 ? tiles : tiles + 1;
 
-    const data = await window.fetch('https://api.spotify.com/v1/playlists/' + id + '?fields=name,tracks(total,limit,items(track(id,name,preview_url,artists(name),album(images))))', {
-      headers: {
-        Authorization: 'Bearer ' + token
+    const data = await window.fetch(
+      "https://api.spotify.com/v1/playlists/" +
+        id +
+        "?fields=name,tracks(total,limit,items(track(id,name,preview_url,artists(name),album(images))))",
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       }
-    })
-    const dataJSON = await data.json()
+    );
+    const dataJSON = await data.json();
 
     // Filter out unnecessary object data and tracks w/ no preview
     const filteredData = dataJSON.tracks.items
@@ -113,17 +118,36 @@ export function fetchPlaylistData (id, token) {
             name: trackObject.track.name,
             artist: trackObject.track.artists[0].name,
             images: trackObject.track.album.images,
-            solved: false
+            solved: false,
           }
       )
-      .filter(Boolean)
+      .filter(Boolean);
 
-    const shuffledData = shuffleArray(filteredData)
+    const shuffledData = shuffleArray(filteredData);
 
     const trackTiles = [...new Array(tracksArrayLength)].map(
       (_, i) => shuffledData[i % (tracksArrayLength / 2)]
-    )
+    );
 
-    dispatch(setTracks(shuffleArray(trackTiles)))
+    dispatch(setTracks(shuffleArray(trackTiles)));
+  };
+}
+
+export function initializeApi() {
+  return (dispatch) => {
+    const storageToken = window.localStorage.getItem("token");
+    const storageExpirationTimestampSeconds = window.localStorage.getItem(
+      "expirationTimestampSeconds"
+    );
+    const nowTimeStampSeconds = Math.floor(Date.now() / 1000);
+    const tokenIsNotExpired =
+      storageExpirationTimestampSeconds - nowTimeStampSeconds > 0;
+    if (
+      storageToken &&
+      storageExpirationTimestampSeconds &&
+      tokenIsNotExpired
+    ) {
+      dispatch(fetchPlaylistData("37i9dQZF1DX4o1oenSJRJd", storageToken));
+    }
   }
 }

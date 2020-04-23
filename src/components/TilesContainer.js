@@ -12,7 +12,7 @@ const StyledContainer = styled.div`
   margin: 20px auto;
 `
 
-function TilesContainer ({ count }) {
+function TilesContainer () {
   const { state: { tracks } } = useContext(Store)
 
   return (
