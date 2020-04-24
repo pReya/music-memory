@@ -4,19 +4,27 @@ import styled from "styled-components";
 import PlaylistTile from "./PlaylistTile";
 
 const StyledSlider = styled.div`
+  margin-top: 50px;
   display: flex;
+  width: 100%;
+  overflow: auto;
 `;
 
 function PlaylistSelector() {
   const {
-    state: { playlistIds },
+    state: { playlists },
   } = useContext(Store);
 
   return (
     <StyledSlider>
-      {playlistIds.map((playlistId) => {
-        return <PlaylistTile key={playlistId} name="Hallo" image="hallo.jpg" />;
-      })}
+      {playlists.map((playlist) => (
+        <PlaylistTile
+          key={playlist.id}
+          playlistId={playlist.id}
+          name={playlist.name}
+          image={playlist.image}
+        />
+      ))}
     </StyledSlider>
   );
 }

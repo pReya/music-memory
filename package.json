@@ -1,9 +1,6 @@
 {
   "name": "musicmemory",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
-  "main": "src/index.js",
   "dependencies": {
     "clsx": "^1.1.0",
     "logrocket": "^1.0.7",
@@ -35,9 +32,8 @@
     "build": "parcel build src/*.html && cp _redirects dist"
   },
   "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
+    "defaults",
+    "not ie 11",
     "not op_mini all"
   ]
 }

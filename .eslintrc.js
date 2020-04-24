@@ -6,9 +6,10 @@ module.exports = {
   },
   extends: [
     "eslint:recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
   ],
-  "plugins": ["react-hooks"],
+  "plugins": ["react-hooks", "prettier"],
   ignorePatterns: ['dist/', 'node_modules/'],
   parserOptions: {
     ecmaVersion: 2018,

@@ -149,5 +149,5 @@ export function initializeApi() {
     ) {
       dispatch(fetchPlaylistData("37i9dQZF1DX4o1oenSJRJd", storageToken));
     }
-  }
+  };
 }
