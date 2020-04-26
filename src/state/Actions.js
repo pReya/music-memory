@@ -1,4 +1,4 @@
-import { shuffleArray } from "../util/helpers";
+import { shuffleArray, checkApiAuth } from "../util/helpers";
 
 export const actionTypes = {
   SET_TRACKS: "SET_TRACKS",
@@ -8,6 +8,7 @@ export const actionTypes = {
   SET_SOLVED: "SET_SOLVED",
   INCREMENT_MOVE_COUNTER: "INCREMENT_MOVE_COUNTER",
   INCREMENT_PAIR_COUNTER: "INCREMENT_PAIR_COUNTER",
+  SET_SETUP_PROGRESS: "SET_SETUP_PROGRESS",
 };
 
 export function setProgress(progress) {
@@ -54,6 +55,13 @@ export function incrementMoveCounter() {
 export function incrementPairCounter() {
   return {
     type: actionTypes.INCREMENT_PAIR_COUNTER,
+  };
+}
+
+export function setSetupProgress(newSetupState) {
+  return {
+    type: actionTypes.SET_SETUP_PROGRESS,
+    newSetupState,
   };
 }
 
@@ -133,21 +141,10 @@ export function fetchPlaylistData(id, token) {
   };
 }
 
-export function initializeApi() {
+export function checkAuthAndGetPlaylist(playlistId) {
   return (dispatch) => {
-    const storageToken = window.localStorage.getItem("token");
-    const storageExpirationTimestampSeconds = window.localStorage.getItem(
-      "expirationTimestampSeconds"
+    checkApiAuth().then((storageToken) =>
+      dispatch(fetchPlaylistData(playlistId, storageToken))
     );
-    const nowTimeStampSeconds = Math.floor(Date.now() / 1000);
-    const tokenIsNotExpired =
-      storageExpirationTimestampSeconds - nowTimeStampSeconds > 0;
-    if (
-      storageToken &&
-      storageExpirationTimestampSeconds &&
-      tokenIsNotExpired
-    ) {
-      dispatch(fetchPlaylistData("37i9dQZF1DX4o1oenSJRJd", storageToken));
-    }
   };
 }

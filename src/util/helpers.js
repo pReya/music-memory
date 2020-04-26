@@ -6,3 +6,23 @@ export const shuffleArray = (array) => {
   }
   return clonedArray;
 };
+
+export const checkApiAuth = () =>
+  new Promise((resolve, reject) => {
+    const storageToken = window.localStorage.getItem("token");
+    const storageExpirationTimestampSeconds = window.localStorage.getItem(
+      "expirationTimestampSeconds"
+    );
+    const nowTimeStampSeconds = Math.floor(Date.now() / 1000);
+    const tokenIsNotExpired =
+      storageExpirationTimestampSeconds - nowTimeStampSeconds > 0;
+    if (
+      storageToken &&
+      storageExpirationTimestampSeconds &&
+      tokenIsNotExpired
+    ) {
+      resolve(storageToken);
+    } else {
+      reject();
+    }
+  });

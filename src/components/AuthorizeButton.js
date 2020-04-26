@@ -35,16 +35,16 @@ response_type=token`;
 
 function AuthorizeButton() {
   const {
-    state: { tracks },
+    state: { setupProcessState },
   } = useContext(Store);
-  const userIsNotAuthorized = tracks.length === 0;
+  const userIsAuthorized = setupProcessState >= 1;
   const onClick = () => {
     window.location.assign(url);
   };
 
   return (
-    <StyledButton disabled={!userIsNotAuthorized} onClick={onClick}>
-      {userIsNotAuthorized ? "Sign In On Spotify" : "You're signed in"}
+    <StyledButton disabled={userIsAuthorized} onClick={onClick}>
+      {userIsAuthorized ? "You're signed in" : "Sign In On Spotify"}
     </StyledButton>
   );
 }

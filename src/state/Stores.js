@@ -2,7 +2,8 @@ import React, { createContext } from "react";
 import { actionTypes } from "./Actions";
 import { createReducer } from "react-use";
 import thunk from "redux-thunk";
-import LogRocket from "logrocket";
+
+// Setup state: 0 = initial, 1 = API authorization, 2 = playlist selected (ready to play)
 
 const initialState = {
   tracks: [],
@@ -12,6 +13,7 @@ const initialState = {
   lastPlayed: null,
   moveCounter: 0,
   pairCounter: 0,
+  setupProcessState: 0,
   playlists: [
     {
       id: "37i9dQZF1DXbTxeAdrVG2l",
@@ -46,16 +48,7 @@ const initialState = {
   ],
 };
 
-const logrocket = LogRocket.reduxMiddleware({
-  actionSanitizer: (action) => {
-    if (action.type === actionTypes.SET_PROGRESS) {
-      return null;
-    }
-    return action;
-  },
-});
-
-const middlewares = [thunk, logrocket];
+const middlewares = [thunk];
 
 if (process.env.NODE_ENV === "development") {
   const { createLogger } = require("redux-logger");
@@ -97,6 +90,9 @@ const StoreProvider = ({ children }) => {
       }
       case actionTypes.INCREMENT_PAIR_COUNTER: {
         return { ...state, pairCounter: state.pairCounter + 1 };
+      }
+      case actionTypes.SET_SETUP_PROGRESS: {
+        return { ...state, setupProcessState: action.newSetupState };
       }
       default:
         throw new Error();
