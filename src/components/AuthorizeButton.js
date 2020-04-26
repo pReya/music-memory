@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
-import styled from 'styled-components'
-import { Store } from '../state/Stores'
+import React, { useContext } from "react";
+import styled from "styled-components";
+import { Store } from "../state/Stores";
 
 const StyledButton = styled.button`
-  background-color: ${props => props.theme.colors.lightGray};
+  background-color: ${(props) => props.theme.colors.lightGray};
   text-transform: uppercase;
   color: white;
   border: 0;
@@ -16,37 +16,37 @@ const StyledButton = styled.button`
   font-weight: 700;
 
   &:not([disabled]) {
-    background-color: ${props => props.theme.colors.spotifyGreen};
+    background-color: ${(props) => props.theme.colors.spotifyGreen};
     cursor: pointer;
 
     &:hover {
-      background-color: ${props => props.theme.colors.spotifyGreenHover};
+      background-color: ${(props) => props.theme.colors.spotifyGreenHover};
     }
   }
-`
+`;
 
-const clientId = '50d55bc1f9274bcb949c49e24214a22e'
-const redirectUri = window.location.origin + '/callback'
+const clientId = "50d55bc1f9274bcb949c49e24214a22e";
+const redirectUri = window.location.origin + "/callback";
 
 const url = `https://accounts.spotify.com/authorize?
 client_id=${clientId}&
 redirect_uri=${encodeURIComponent(redirectUri)}&
-response_type=token`
+response_type=token`;
 
-function AuthorizeButton () {
+function AuthorizeButton() {
   const {
-    state: { tracks }
-  } = useContext(Store)
-  const userIsNotAuthorized = tracks.length === 0
+    state: { setupProcessState },
+  } = useContext(Store);
+  const userIsAuthorized = setupProcessState >= 1;
   const onClick = () => {
-    window.location.assign(url)
-  }
+    window.location.assign(url);
+  };
 
   return (
-    <StyledButton disabled={!userIsNotAuthorized} onClick={onClick}>
-      {userIsNotAuthorized ? 'Sign In On Spotify' : 'You\'re signed in'}
+    <StyledButton disabled={userIsAuthorized} onClick={onClick}>
+      {userIsAuthorized ? "You're signed in" : "Sign In On Spotify"}
     </StyledButton>
-  )
+  );
 }
 
-export default AuthorizeButton
+export default AuthorizeButton;

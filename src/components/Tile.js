@@ -1,20 +1,22 @@
-import React, { useContext } from 'react'
-import { Store } from '../state/Stores'
-import styled from 'styled-components'
-import { startOrPausePlayback } from '../state/Actions'
-import { CircularProgressbar } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
-import theme from '../theme'
+import React, { useContext } from "react";
+import { Store } from "../state/Stores";
+import styled from "styled-components";
+import { startOrPausePlayback } from "../state/Actions";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import theme from "../theme";
 
 const StyledWrapper = styled.div`
   border: 1px solid;
   border-color: ${({ selected, theme }) =>
-    selected ? 'red' : theme.colors.lightGray};
+    selected ? "red" : theme.colors.lightGray};
   color: ${({ theme }) => theme.colors.lightGray};
-  ${'' /* background: ${({ solved, theme, bgImage }) =>
-    solved ? `url('${bgImage}')` : 'white'}; */}
+  ${
+    "" /* background: ${({ solved, theme, bgImage }) =>
+    solved ? `url('${bgImage}')` : 'white'}; */
+  }
   background-color: ${({ solved, theme }) =>
-    solved ? theme.colors.spotifyGreen : 'white'};
+    solved ? theme.colors.spotifyGreen : "white"};
   box-sizing: border-box;
   border-radius: 5px;
   width: 150px;
@@ -37,34 +39,38 @@ const StyledWrapper = styled.div`
     transform: scale(1.05);
     color: rgba(0, 0, 0, 0.6);
     border-color: ${({ selected, theme }) =>
-      selected ? 'red' : theme.colors.darkGray};
+      selected ? "red" : theme.colors.darkGray};
   }
 
   .unsolved {
     font-size: 2.5em;
-    ${'' /* background-color: ${({ solved, theme }) =>
-    solved ? theme.colors.spotifyGreen : 'white'}; */}
+    ${
+      "" /* background-color: ${({ solved, theme }) =>
+    solved ? theme.colors.spotifyGreen : 'white'}; */
+    }
   }
 
   .solved {
     font-size: 1em;
-    ${'' /* position: absolute;
+    ${
+      "" /* position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: ${({ theme }) => theme.colors.spotifyGreen + '80'}; */}
+    background-color: ${({ theme }) => theme.colors.spotifyGreen + '80'}; */
+    }
   }
-`
+`;
 
-function Tile (props) {
-  const { number } = props
+function Tile(props) {
+  const { number } = props;
   const {
     dispatch,
-    state: { lastPlayed, isPlaying, progress, tracks }
-  } = useContext(Store)
-  const tileIsPlaying = isPlaying && lastPlayed === number
-  const selected = lastPlayed === number
-  const solved = tracks[number - 1].solved
+    state: { lastPlayed, isPlaying, progress, tracks },
+  } = useContext(Store);
+  const tileIsPlaying = isPlaying && lastPlayed === number;
+  const selected = lastPlayed === number;
+  const solved = tracks[number - 1].solved;
 
   return (
     <StyledWrapper
@@ -72,43 +78,44 @@ function Tile (props) {
       solved={solved}
       selected={tileIsPlaying || selected}
       onClick={() =>
-        (!solved || isPlaying) && dispatch(startOrPausePlayback(number))}
+        (!solved || isPlaying) && dispatch(startOrPausePlayback(number))
+      }
     >
       {tileIsPlaying ? (
         <CircularProgressbar
-          className='unsolved'
+          className="unsolved"
           value={progress}
           text={number}
           maxValue={1}
           styles={{
             path: {
               stroke: `${theme.colors.darkGray}`,
-              strokeLinecap: 'butt'
+              strokeLinecap: "butt",
             },
             trail: {
               stroke: `${theme.colors.lightGray}`,
-              strokeLinecap: 'butt'
+              strokeLinecap: "butt",
             },
             text: {
               fill: `${theme.colors.darkGray}`,
-              fontSize: '2.5rem'
-            }
+              fontSize: "2.5rem",
+            },
           }}
         />
       ) : (
         <>
           {solved ? (
-            <div className='solved'>
+            <div className="solved">
               <div>{tracks[number - 1].artist}</div>
               <div>{tracks[number - 1].name}</div>
             </div>
           ) : (
-            <div className='unsolved'>{String(number)}</div>
+            <div className="unsolved">{String(number)}</div>
           )}
         </>
       )}
     </StyledWrapper>
-  )
+  );
 }
 
-export default Tile
+export default Tile;
