@@ -7,7 +7,7 @@ import thunk from "redux-thunk";
 
 const initialState = {
   tracks: [],
-  tiles: 9,
+  tiles: 12,
   isPlaying: false,
   progress: 0,
   lastPlayed: null,
@@ -93,6 +93,9 @@ const StoreProvider = ({ children }) => {
       }
       case actionTypes.SET_SETUP_PROGRESS: {
         return { ...state, setupProcessState: action.newSetupState };
+      }
+      case actionTypes.SET_TILES: {
+        return { ...state, tiles: action.tiles };
       }
       default:
         throw new Error();

@@ -5,4 +5,5 @@ export default {
     spotifyGreen: "#1db954",
     spotifyGreenHover: "#1ed760",
   },
+  baseFont: "IBM Plex Sans",
 };
