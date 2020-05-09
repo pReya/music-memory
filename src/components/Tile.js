@@ -18,7 +18,6 @@ const StyledWrapper = styled.div`
   background-color: ${({ solved, theme }) =>
     solved ? theme.colors.spotifyGreen : "white"};
   box-sizing: border-box;
-  border-radius: 5px;
   width: 150px;
   height: 150px;
   text-align: center;
@@ -106,7 +105,7 @@ function Tile(props) {
         <>
           {solved ? (
             <div className="solved">
-              <div>{tracks[number - 1].artist}</div>
+              <div>{tracks[number - 1].artist} - </div>
               <div>{tracks[number - 1].name}</div>
             </div>
           ) : (

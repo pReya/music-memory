@@ -17,7 +17,7 @@ const StyledApp = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: ${({ theme }) => theme.baseFont}, sans-serif;
+  font-family: "${({ theme }) => theme.baseFont}", "sans-serif";
 `;
 
 export default function App() {
