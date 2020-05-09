@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html && cp _redirects dist"
+    "build": "parcel build --experimental-scope-hoisting src/*.html && cp _redirects dist"
   },
   "browserslist": [
     "defaults",
