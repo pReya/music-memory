@@ -7,7 +7,7 @@ import { checkAuthAndGetPlaylist, setSetupProgress } from "../state/Actions";
 const StyledSlider = styled.div`
   margin-top: 50px;
   display: flex;
-  width: 80%;
+  max-width: 80%;
   overflow: auto;
 `;
 

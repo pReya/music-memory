@@ -1,7 +1,8 @@
-import { shuffleArray, checkApiAuth } from "../util/helpers";
+import { shuffleArray, getApiTokenFromStorage } from "../util/helpers";
 
 export const actionTypes = {
   SET_TRACKS: "SET_TRACKS",
+  SET_TILES: "SET_TILES",
   SET_IS_PLAYING: "SET_IS_PLAYING",
   SET_LAST_PLAYED: "SET_LAST_PLAYED",
   SET_PROGRESS: "SET_PROGRESS",
@@ -15,6 +16,13 @@ export function setProgress(progress) {
   return {
     type: actionTypes.SET_PROGRESS,
     progress,
+  };
+}
+
+export function setTiles(tiles) {
+  return {
+    type: actionTypes.SET_TILES,
+    tiles,
   };
 }
 
@@ -143,8 +151,7 @@ export function fetchPlaylistData(id, token) {
 
 export function checkAuthAndGetPlaylist(playlistId) {
   return (dispatch) => {
-    checkApiAuth().then((storageToken) =>
-      dispatch(fetchPlaylistData(playlistId, storageToken))
-    );
+    const token = getApiTokenFromStorage();
+    dispatch(fetchPlaylistData(playlistId, token));
   };
 }

@@ -7,15 +7,17 @@ import { Store } from "../state/Stores";
 import Player from "./Player";
 import PlaylistSelector from "./PlaylistSelector";
 import UrlCallback from "./UrlCallback";
-import { checkApiAuth } from "../util/helpers";
+import { getApiTokenFromStorage } from "../util/helpers";
 import { setSetupProgress } from "../state/Actions";
+import BoardSizeConfig from "./BoardSizeConfig";
+import "typeface-ibm-plex-sans";
 
 const StyledApp = styled.div`
   box-sizing: border-box;
-  font-family: sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: ${({ theme }) => theme.baseFont}, sans-serif;
 `;
 
 export default function App() {
@@ -23,9 +25,8 @@ export default function App() {
 
   useEffect(() => {
     if (state.setupProcessState === 0) {
-      checkApiAuth().then(() => {
-        dispatch(setSetupProgress(1));
-      });
+      const token = getApiTokenFromStorage();
+      if (token) dispatch(setSetupProgress(1));
     }
   }, []);
 
@@ -37,7 +38,12 @@ export default function App() {
       <StyledApp>
         <h1>Music Memory</h1>
         <AuthorizeButton />
-        {state.setupProcessState === 1 && <PlaylistSelector />}
+        {state.setupProcessState === 1 && (
+          <>
+            <BoardSizeConfig />
+            <PlaylistSelector />
+          </>
+        )}
         {state.setupProcessState === 2 && (
           <>
             <h2>

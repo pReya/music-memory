@@ -7,22 +7,15 @@ export const shuffleArray = (array) => {
   return clonedArray;
 };
 
-export const checkApiAuth = () =>
-  new Promise((resolve, reject) => {
-    const storageToken = window.localStorage.getItem("token");
-    const storageExpirationTimestampSeconds = window.localStorage.getItem(
-      "expirationTimestampSeconds"
-    );
+export const getApiTokenFromStorage = () => {
+  const storageToken = window.localStorage.getItem("token");
+  const storageExpirationTimestampSeconds = window.localStorage.getItem(
+    "expirationTimestampSeconds"
+  );
+  if (storageToken && storageExpirationTimestampSeconds) {
     const nowTimeStampSeconds = Math.floor(Date.now() / 1000);
     const tokenIsNotExpired =
       storageExpirationTimestampSeconds - nowTimeStampSeconds > 0;
-    if (
-      storageToken &&
-      storageExpirationTimestampSeconds &&
-      tokenIsNotExpired
-    ) {
-      resolve(storageToken);
-    } else {
-      reject();
-    }
-  });
+    if (tokenIsNotExpired) return storageToken;
+  }
+};

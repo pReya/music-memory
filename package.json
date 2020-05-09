@@ -13,11 +13,13 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "state": "^0.2.0",
-    "styled-components": "^5.1.0"
+    "styled-components": "^5.1.0",
+    "typeface-ibm-plex-sans": "0.0.75"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-react": "^7.9.4",
+    "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
@@ -25,6 +27,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-nuke-dist": "^1.0.1",
     "prettier": "^2.0.5"
   },
   "scripts": {
