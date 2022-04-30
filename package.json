@@ -5,7 +5,7 @@
     "clsx": "^1.1.0",
     "query-string": "^7.1.1",
     "react": "^18.1.0",
-    "react-circular-progressbar": "^2.0.3",
+    "react-circular-progressbar": "^2.0.4",
     "react-dom": "^18.1.0",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
@@ -16,22 +16,19 @@
     "typeface-ibm-plex-sans": "^1.1.13"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.10",
-    "@babel/preset-react": "^7.9.4",
-    "babel-plugin-styled-components": "^2.0.7",
     "eslint": "^8.14.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.5.0",
-    "parcel-bundler": "^1.12.4",
-    "parcel-plugin-nuke-dist": "^1.0.1",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "vite": "^2.9.6"
   },
   "scripts": {
-    "start": "parcel src/*.html",
-    "build": "parcel build --experimental-scope-hoisting src/*.html && cp _redirects dist"
+    "dev": "vite src/ --host --port 1234",
+    "build": "vite build src/",
+    "preview": "vite preview src/"
   },
   "browserslist": [
     "defaults",

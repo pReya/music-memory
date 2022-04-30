@@ -2,6 +2,7 @@ import React, { createContext } from "react";
 import { actionTypes } from "./Actions";
 import { createReducer } from "react-use";
 import thunk from "redux-thunk";
+import { createLogger } from "redux-logger";
 
 // Setup state: 0 = initial, 1 = API authorization, 2 = playlist selected (ready to play)
 
@@ -51,7 +52,6 @@ const initialState = {
 const middlewares = [thunk];
 
 if (process.env.NODE_ENV === "development") {
-  const { createLogger } = require("redux-logger");
   const logger = createLogger({
     predicate: (getState, action) => action.type !== actionTypes.SET_PROGRESS,
     collapsed: (getState, action, logEntry) => !logEntry.error,
