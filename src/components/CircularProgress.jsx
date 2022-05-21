@@ -3,12 +3,8 @@ import styled from "styled-components";
 
 const StyledContainer = styled.div`
   position: relative;
-  width: 200px;
-  height: 200px;
-
-  svg {
-    filter: drop-shadow(8px 8px 10px black);
-  }
+  width: 100%;
+  height: 100%;
 
   #outerCircle {
     transform: rotate(-90deg);
@@ -19,9 +15,7 @@ const StyledContainer = styled.div`
 const CircularProgress = ({ progress }) => {
   const radius = "40";
   const circumference = radius * 2 * Math.PI;
-  const dashOffset = circumference - (circumference / 100) * progress;
-
-  console.log("dashOffset", dashOffset);
+  const dashOffset = circumference - (circumference / 100) * (progress || 0);
 
   return (
     <StyledContainer>
@@ -29,7 +23,7 @@ const CircularProgress = ({ progress }) => {
         <circle
           id="outerCircle"
           fill="transparent"
-          stroke="white"
+          stroke="lightgrey"
           strokeWidth="12"
           strokeDasharray={`${circumference} ${circumference}`}
           strokeDashoffset={dashOffset}
