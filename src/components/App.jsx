@@ -11,6 +11,7 @@ import { getApiTokenFromStorage } from "../util/helpers";
 import { setSetupProgress } from "../state/Actions";
 import BoardSizeConfig from "./BoardSizeConfig";
 import "typeface-ibm-plex-sans";
+// import CircularProgress from "./CircularProgress";
 
 const StyledApp = styled.div`
   box-sizing: border-box;
@@ -37,6 +38,7 @@ export default function App() {
       </Route>
       <StyledApp>
         <h1>Music Memory</h1>
+        {/* <CircularProgress progress={80} /> */}
         <AuthorizeButton />
         {state.setupProcessState === 1 && (
           <>

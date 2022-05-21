@@ -2,9 +2,7 @@ import React, { useContext } from "react";
 import { Store } from "../state/Stores";
 import styled from "styled-components";
 import { startOrPausePlayback } from "../state/Actions";
-import { CircularProgressbar } from "react-circular-progressbar";
-import "react-circular-progressbar/dist/styles.css";
-import theme from "../theme";
+import CircularProgress from "./CircularProgress";
 
 const StyledWrapper = styled.div`
   border: 1px solid;
@@ -81,26 +79,7 @@ function Tile(props) {
       }
     >
       {tileIsPlaying ? (
-        <CircularProgressbar
-          className="unsolved"
-          value={progress}
-          text={number}
-          maxValue={1}
-          styles={{
-            path: {
-              stroke: `${theme.colors.darkGray}`,
-              strokeLinecap: "butt",
-            },
-            trail: {
-              stroke: `${theme.colors.lightGray}`,
-              strokeLinecap: "butt",
-            },
-            text: {
-              fill: `${theme.colors.darkGray}`,
-              fontSize: "2.5rem",
-            },
-          }}
-        />
+        <CircularProgress progress={progress * 100} />
       ) : (
         <>
           {solved ? (

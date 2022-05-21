@@ -77,7 +77,10 @@ const StoreProvider = ({ children }) => {
         return newState;
       }
       case actionTypes.SET_PROGRESS: {
-        return { ...state, progress: action.progress };
+        if (state.progress !== action.progress) {
+          return { ...state, progress: action.progress };
+        }
+        return state;
       }
       case actionTypes.SET_LAST_PLAYED: {
         return { ...state, lastPlayed: action.id };
