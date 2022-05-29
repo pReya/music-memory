@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext, useState } from "react";
 import { Store } from "../state/Stores";
 import { setIsPlaying, setProgress } from "../state/Actions";
 
-function Player() {
+const Player: React.FC = () => {
   const {
     state: { isPlaying, tracks, lastPlayed },
     dispatch,
@@ -59,6 +59,6 @@ function Player() {
       <code>audio</code> element.
     </audio>
   );
-}
+};
 
 export default Player;

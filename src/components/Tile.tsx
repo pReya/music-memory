@@ -4,7 +4,13 @@ import styled from "styled-components";
 import { startOrPausePlayback } from "../state/Actions";
 import CircularProgress from "./CircularProgress";
 
-const StyledWrapper = styled.div`
+interface StyledWrapperProps {
+  readonly bgImage: string;
+  readonly selected: boolean;
+  readonly solved: boolean;
+}
+
+const StyledWrapper = styled.div<StyledWrapperProps>`
   border: 1px solid;
   border-color: ${({ selected, theme }) =>
     selected ? "red" : theme.colors.lightGray};
@@ -59,7 +65,11 @@ const StyledWrapper = styled.div`
   }
 `;
 
-function Tile(props) {
+type TileProps = {
+  number: number;
+};
+
+const Tile: React.FC<TileProps> = (props) => {
   const { number } = props;
   const {
     dispatch,
@@ -94,6 +104,6 @@ function Tile(props) {
       )}
     </StyledWrapper>
   );
-}
+};
 
 export default Tile;

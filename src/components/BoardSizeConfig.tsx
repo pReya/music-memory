@@ -7,7 +7,7 @@ const StyledContainer = styled.div`
   margin-top: 50px;
 `;
 
-function BoardSizeConfig() {
+const BoardSizeConfig: React.FC = () => {
   const {
     state: { tiles },
     dispatch,
@@ -30,6 +30,6 @@ function BoardSizeConfig() {
       />
     </StyledContainer>
   );
-}
+};
 
 export default BoardSizeConfig;

@@ -6,7 +6,19 @@ import { createLogger } from "redux-logger";
 
 // Setup state: 0 = initial, 1 = API authorization, 2 = playlist selected (ready to play)
 
-const initialState = {
+interface stateType {
+  tracks: Array<any>;
+  tiles: number;
+  isPlaying: boolean;
+  progress: number;
+  lastPlayed: any;
+  moveCounter: number;
+  pairCounter: number;
+  setupProcessState: number;
+  playlists: Array<{ id: string; image: string; name: string }>;
+}
+
+const initialState: stateType = {
   tracks: [],
   tiles: 12,
   isPlaying: false,
@@ -49,18 +61,18 @@ const initialState = {
   ],
 };
 
-const middlewares = [thunk];
+const middlewares: Array<any> = [thunk];
 
 if (process.env.NODE_ENV === "development") {
   const logger = createLogger({
-    predicate: (getState, action) => action.type !== actionTypes.SET_PROGRESS,
-    collapsed: (getState, action, logEntry) => !logEntry.error,
+    predicate: (_, action) => action.type !== actionTypes.SET_PROGRESS,
+    collapsed: (_, __, logEntry) => !logEntry.error,
     timestamp: false,
   });
   middlewares.push(logger);
 }
 
-const useThunkReducer = createReducer(...middlewares);
+const useThunkReducer = createReducer<any, {state: stateType; reducer: any;}>(...middlewares);
 
 export const Store = createContext(initialState);
 
@@ -105,8 +117,13 @@ const StoreProvider = ({ children }) => {
     }
   }, initialState);
 
+  interface ProviderType {
+    state: stateType;
+    dispatch: any;
+  }
+
   return (
-    <Store.Provider value={{ state, dispatch }}>{children}</Store.Provider>
+    <Store.Provider value={{ state, dispatch } as ProviderType}>{children}</Store.Provider>
   );
 };
 

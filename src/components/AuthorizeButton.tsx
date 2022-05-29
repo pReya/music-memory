@@ -33,7 +33,7 @@ client_id=${clientId}&
 redirect_uri=${encodeURIComponent(redirectUri)}&
 response_type=token`;
 
-function AuthorizeButton() {
+const AuthorizeButton: React.FC = () => {
   const {
     state: { setupProcessState },
   } = useContext(Store);
@@ -47,6 +47,6 @@ function AuthorizeButton() {
       {userIsAuthorized ? "You're signed in" : "Sign In On Spotify"}
     </StyledButton>
   );
-}
+};
 
 export default AuthorizeButton;

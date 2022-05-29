@@ -67,6 +67,7 @@ export function incrementPairCounter() {
 }
 
 export function setSetupProgress(newSetupState) {
+  console.log("HELLO ACTION");
   return {
     type: actionTypes.SET_SETUP_PROGRESS,
     newSetupState,

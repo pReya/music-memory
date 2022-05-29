@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import TilesContainer from "./TilesContainer";
 import AuthorizeButton from "./AuthorizeButton";
@@ -32,32 +32,38 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <Route path="/callback">
-        <UrlCallback location={window.location} />
-      </Route>
-      <StyledApp>
-        <h1>Music Memory</h1>
-        {/* <CircularProgress progress={80} /> */}
-        <AuthorizeButton />
-        {state.setupProcessState === 1 && (
-          <>
-            <BoardSizeConfig />
-            <PlaylistSelector />
-          </>
-        )}
-        {state.setupProcessState === 2 && (
-          <>
-            <h2>
-              Moves: {Math.floor(state.moveCounter / 2)} – Pairs:{" "}
-              {state.pairCounter}
-            </h2>
+    <Routes>
+      <Route
+        path="/callback"
+        element={<UrlCallback location={window.location} />}
+      />
+      <Route
+        path="/"
+        element={
+          <StyledApp>
+            <h1>Music Memory</h1>
+            {/* <CircularProgress progress={80} /> */}
+            <AuthorizeButton />
+            {state.setupProcessState === 1 && (
+              <>
+                <BoardSizeConfig />
+                <PlaylistSelector />
+              </>
+            )}
+            {state.setupProcessState === 2 && (
+              <>
+                <h2>
+                  Moves: {Math.floor(state.moveCounter / 2)} – Pairs:{" "}
+                  {state.pairCounter}
+                </h2>
 
-            <TilesContainer count={state.tiles} />
-            <Player />
-          </>
-        )}
-      </StyledApp>
-    </>
+                <TilesContainer count={state.tiles} />
+                <Player />
+              </>
+            )}
+          </StyledApp>
+        }
+      />
+    </Routes>
   );
 }

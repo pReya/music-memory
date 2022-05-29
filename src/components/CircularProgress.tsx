@@ -12,8 +12,12 @@ const StyledContainer = styled.div`
   }
 `;
 
-const CircularProgress = ({ progress }) => {
-  const radius = "40";
+interface CircularProgressProps {
+  readonly progress: number;
+}
+
+const CircularProgress: React.FC<CircularProgressProps> = ({ progress }) => {
+  const radius = 40;
   const circumference = radius * 2 * Math.PI;
   const dashOffset = circumference - (circumference / 100) * (progress || 0);
 

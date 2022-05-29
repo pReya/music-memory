@@ -11,7 +11,7 @@ const StyledSlider = styled.div`
   overflow: auto;
 `;
 
-function PlaylistSelector() {
+const PlaylistSelector: React.FC = () => {
   const {
     dispatch,
     state: { playlists },
@@ -33,6 +33,6 @@ function PlaylistSelector() {
       ))}
     </StyledSlider>
   );
-}
+};
 
 export default PlaylistSelector;

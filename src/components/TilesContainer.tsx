@@ -20,7 +20,7 @@ function TilesContainer() {
   return (
     <StyledContainer>
       {Boolean(tracks.length) &&
-        tracks.map((track, i) => <Tile key={i + 1} number={i + 1} />)}
+        tracks.map((_, i) => <Tile key={i + 1} number={i + 1} />)}
     </StyledContainer>
   );
 }

@@ -9,13 +9,11 @@ import App from "./components/App";
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Router>
-        <StoreProvider>
-          <App />
-        </StoreProvider>
-      </Router>
-    </ThemeProvider>
-  </React.StrictMode>
+  <ThemeProvider theme={theme}>
+    <Router>
+      <StoreProvider>
+        <App />
+      </StoreProvider>
+    </Router>
+  </ThemeProvider>
 );
