@@ -22,7 +22,7 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.5.0",
     "prettier": "^2.0.5",
-    "vite": "^2.9.6"
+    "vite": "^2.9.13"
   },
   "scripts": {
     "dev": "vite src/ --host --port 1234",
